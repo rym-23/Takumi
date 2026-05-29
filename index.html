@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAKUMI — Cocina con Alma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@100;300;400;600&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --beige: #f0e9d6;
+    --charcoal: #1a1a1a;
+    --muted: #888880;
+    --border: rgba(201,168,76,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s ease;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+  }
+
+  .nav-logo img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+
+  .nav-logo-text {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 100;
+    letter-spacing: 0.5em;
+    font-size: 1.1rem;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--white);
+    transition: all 0.3s;
+  }
+
+  /* ── HERO ── */
+  #inicio {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 120px 2rem 4rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-content {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+    animation: fadeUp 1.2s ease both;
+  }
+
+  .hero-logo {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 2rem;
+    filter: drop-shadow(0 0 40px rgba(201,168,76,0.3));
+    animation: floatLogo 6s ease-in-out infinite;
+  }
+
+  @keyframes floatLogo {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .hero-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .hero-title {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 100;
+    font-size: clamp(4rem, 10vw, 8rem);
+    letter-spacing: 0.5em;
+    line-height: 1;
+    color: var(--white);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    color: var(--gold-light);
+    letter-spacing: 0.15em;
+    margin-bottom: 3rem;
+  }
+
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+
+  .hero-divider span {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero-divider::before,
+  .hero-divider::after {
+    content: '';
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold));
+  }
+  .hero-divider::after {
+    background: linear-gradient(to left, transparent, var(--gold));
+  }
+
+  .hero-desc {
+    max-width: 620px;
+    margin: 0 auto 4rem;
+    line-height: 1.9;
+    color: #b0a898;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── CARDS ── */
+  .section {
+    padding: 6rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .divider-line {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin-bottom: 2rem;
+  }
+
+  /* MISSION / VISION */
+  .mv-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5px;
+    margin: 3rem 0;
+    border: 1px solid var(--border);
+  }
+
+  .mv-card {
+    padding: 3rem;
+    background: rgba(255,255,255,0.02);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .mv-card:hover { background: rgba(201,168,76,0.05); }
+
+  .mv-card::before {
+    content: attr(data-kanji);
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 6rem;
+    color: rgba(201,168,76,0.06);
+    pointer-events: none;
+  }
+
+  .mv-card h3 {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .mv-card p {
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: #b0a898;
+  }
+
+  /* PILARES */
+  .pilares-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    border: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+
+  .pilar-card {
+    padding: 2.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    cursor: default;
+  }
+
+  .pilar-card:hover {
+    background: rgba(201,168,76,0.08);
+  }
+
+  .pilar-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+
+  .pilar-card:hover::after { transform: scaleX(1); }
+
+  .pilar-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .pilar-card h4 {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .pilar-card p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* OBJETIVOS */
+  .obj-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .obj-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: #b0a898;
+    line-height: 1.7;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .obj-list li:hover {
+    border-color: rgba(201,168,76,0.5);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .obj-list li::before {
+    content: '〇';
+    color: var(--gold);
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .full-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .full-divider::before {
+    content: '匠';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--black);
+    padding: 0 1.5rem;
+    font-family: 'Noto Serif JP', serif;
+    color: var(--gold);
+    font-size: 1.2rem;
+  }
+
+  /* ── SEMANA 1 ── */
+  #semana1 {
+    background: rgba(255,255,255,0.015);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .semana-hero {
+    text-align: center;
+    padding: 5rem 2rem 3rem;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  }
+
+  .topics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .topic-card {
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+
+  .topic-card:hover {
+    border-color: rgba(201,168,76,0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .topic-card .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-weight: 300;
+    color: rgba(201,168,76,0.12);
+    line-height: 1;
+    margin-bottom: -1rem;
+  }
+
+  .topic-card h3 {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .topic-card p {
+    font-size: 0.85rem;
+    color: #b0a898;
+    line-height: 1.85;
+    margin-bottom: 1.5rem;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+
+  .tag:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 3rem;
+    border: 1px solid var(--border);
+  }
+
+  .step {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .step:last-child { border-right: none; }
+  .step:hover { background: rgba(201,168,76,0.05); }
+
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    color: var(--gold);
+    opacity: 0.4;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .step h4 {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .step p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── NOTICIAS ── */
+  #noticias {
+    padding-top: 0;
+  }
+
+  .fusion-banner {
+    background: linear-gradient(135deg, rgba(201,168,76,0.1) 0%, rgba(201,168,76,0.02) 100%);
+    border: 1px solid var(--border);
+    padding: 4rem 3rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fusion-banner::before {
+    content: '融合';
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 8rem;
+    color: rgba(201,168,76,0.06);
+    pointer-events: none;
+  }
+
+  .fusion-banner h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+    color: var(--gold-light);
+  }
+
+  .fusion-banner p {
+    max-width: 600px;
+    font-size: 0.88rem;
+    line-height: 1.9;
+    color: #b0a898;
+  }
+
+  /* MENÚ */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .menu-cat {
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .menu-cat-header {
+    padding: 1.2rem 1.8rem;
+    background: rgba(201,168,76,0.08);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .menu-cat-header span.icon { font-size: 1.2rem; }
+
+  .menu-cat-header h3 {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .menu-items { padding: 1.5rem; }
+
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+    transition: all 0.3s;
+  }
+
+  .menu-item:last-child { border-bottom: none; }
+  .menu-item:hover { padding-left: 0.5rem; }
+
+  .menu-item-name {
+    font-size: 0.82rem;
+    color: var(--white);
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .menu-item-price {
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+
+  /* CURIOSIDAD */
+  .curiosidad {
+    margin-top: 4rem;
+    padding: 3rem;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.01);
+    position: relative;
+  }
+
+  .curiosidad::before {
+    content: '"';
+    position: absolute;
+    top: 1rem;
+    left: 2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem;
+    color: rgba(201,168,76,0.1);
+    line-height: 1;
+  }
+
+  .curiosidad h3 {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .curiosidad p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--gold-light);
+    max-width: 700px;
+  }
+
+  /* GALERÍA */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 200px 200px;
+    gap: 4px;
+    margin-top: 3rem;
+  }
+
+  .gallery-item {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .gallery-item:first-child {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.75) saturate(0.7);
+    transition: all 0.6s;
+  }
+
+  .gallery-item:hover img {
+    filter: brightness(0.9) saturate(1);
+    transform: scale(1.05);
+  }
+
+  .gallery-item .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .gallery-item:hover .overlay { opacity: 1; }
+
+  .gallery-item .overlay span {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 6rem;
+    border-top: 1px solid var(--border);
+    padding: 4rem 3rem 2rem;
+    background: rgba(0,0,0,0.5);
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .footer-brand img {
+    width: 60px;
+    margin-bottom: 1.5rem;
+    filter: brightness(0) invert(1) opacity(0.5);
+  }
+
+  .footer-brand p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 300px;
+  }
+
+  .footer-col h4 {
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-col ul {
+    list-style: none;
+  }
+
+  .footer-col ul li {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+    cursor: default;
+    transition: color 0.3s;
+  }
+
+  .footer-col ul li:hover { color: var(--white); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    color: rgba(136,136,128,0.5);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-bottom .kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    color: rgba(201,168,76,0.3);
+  }
+
+  /* ── SCROLL UP ── */
+  #scrollUp {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 44px;
+    height: 44px;
+    background: rgba(10,10,10,0.9);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 999;
+    text-decoration: none;
+  }
+
+  #scrollUp.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #scrollUp:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NEWSLETTER FRAME ── */
+  .newsletter-frame { margin-top: 2rem; }
+
+  .newsletter-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    opacity: 0.7;
+  }
+
+  .newsletter-img-wrap {
+    position: relative;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 60px 120px rgba(0,0,0,0.4);
+    transition: transform 0.4s, box-shadow 0.4s;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .newsletter-img-wrap:hover {
+    transform: translateY(-6px) scale(1.005);
+    box-shadow: 0 0 0 1px rgba(201,168,76,0.25), 0 40px 100px rgba(0,0,0,0.8);
+  }
+
+  .newsletter-img { width: 100%; display: block; }
+
+  .newsletter-corner {
+    position: absolute;
+    width: 18px; height: 18px;
+    border-color: var(--gold);
+    border-style: solid;
+    opacity: 0.7;
+  }
+  .newsletter-corner.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .newsletter-corner.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+  .newsletter-corner.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+  .newsletter-corner.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+  .newsletter-caption {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-top: 1.2rem;
+    text-transform: uppercase;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0; right: 0;
+      flex-direction: column;
+      background: rgba(10,10,10,0.98);
+      padding: 2rem;
+      gap: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+
+    .hero-logo { width: 140px; height: 140px; }
+
+    .mv-grid { grid-template-columns: 1fr; }
+    .pilares-grid { grid-template-columns: 1fr 1fr; }
+    .topics-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .step { border-right: none; border-bottom: 1px solid var(--border); }
+    .step:nth-child(2n) { border-right: none; }
+    .menu-grid { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .gallery-item:first-child { grid-column: 1; grid-row: 1; }
+    .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+    .obj-list { grid-template-columns: 1fr; }
+    .section { padding: 4rem 1.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title { font-size: 3rem; letter-spacing: 0.3em; }
+    .pilares-grid { grid-template-columns: 1fr 1fr; }
+    .gallery { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#inicio" class="nav-logo">
+    <img src="takumi blanco.png" alt="Takumi Logo">
+    <span class="nav-logo-text">Takumi</span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#semana1">Semana 1</a></li>
+    <li><a href="#noticias">Noticias</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+
+  <div class="hero-content">
+    <img src="takumi blanco.png" alt="Takumi Kitsune Logo" class="hero-logo">
+    <p class="hero-kanji">匠 · 狐神 · 心</p>
+    <h1 class="hero-title">TAKUMI</h1>
+    <p class="hero-sub">Cocina con alma</p>
+    <div class="hero-divider"><span>Fusión Japonesa · Colombiana</span></div>
+    <p class="hero-desc">
+      Takumi (匠) es una empresa gastronómica enfocada en la preparación y venta de comidas de alta calidad. Nace de la pasión por la cocina y el deseo de crear platos que brinden una experiencia especial. Combina buen sabor, creatividad y excelente atención, innovando con recetas inspiradas en la fusión de la tradición japonesa y colombiana.
+    </p>
+  </div>
+
+  <!-- MISIÓN Y VISIÓN -->
+  <div class="section" style="padding-top:1rem; width:100%;">
+    <div class="reveal">
+      <span class="section-label">Identidad corporativa</span>
+      <h2 class="section-title">Misión & <em>Visión</em></h2>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="mv-grid reveal">
+      <div class="mv-card" data-kanji="使">
+        <h3>Misión</h3>
+        <p>Ofrecer comidas deliciosas y de calidad, preparadas con dedicación y creatividad, brindando una excelente atención para satisfacer plenamente a nuestros clientes en cada visita.</p>
+      </div>
+      <div class="mv-card" data-kanji="夢">
+        <h3>Visión</h3>
+        <p>Ser una empresa reconocida por la calidad de sus platos, su buen servicio y su innovación en la gastronomía, convirtiéndose en uno de los restaurantes preferidos de la región.</p>
+      </div>
+    </div>
+
+    <!-- OBJETIVOS -->
+    <div class="reveal" style="margin-top:3rem;">
+      <span class="section-label">Propósito</span>
+      <h2 class="section-title">Objetivos <em>Específicos</em></h2>
+      <div class="divider-line"></div>
+      <ul class="obj-list">
+        <li>Preparar comidas con ingredientes frescos y de buena calidad</li>
+        <li>Brindar atención amable y respetuosa a cada cliente</li>
+        <li>Innovar constantemente con nuevas recetas y presentaciones</li>
+        <li>Mantener altos estándares de higiene y limpieza</li>
+        <li>Crear un ambiente cómodo, moderno y agradable</li>
+        <li>Fusionar lo mejor de la gastronomía japonesa y colombiana</li>
+      </ul>
+    </div>
+
+    <!-- PILARES -->
+    <div class="reveal" style="margin-top:3.5rem;">
+      <span class="section-label">Fundamentos</span>
+      <h2 class="section-title">Nuestros <em>Pilares</em></h2>
+      <div class="divider-line"></div>
+      <div class="pilares-grid">
+        <div class="pilar-card">
+          <span class="pilar-icon">⬡</span>
+          <h4>Calidad</h4>
+          <p>Ingredientes frescos y procesos rigurosos en cada preparación</p>
+        </div>
+        <div class="pilar-card">
+          <span class="pilar-icon">◈</span>
+          <h4>Creatividad</h4>
+          <p>Recetas innovadoras que fusionan culturas y sabores únicos</p>
+        </div>
+        <div class="pilar-card">
+          <span class="pilar-icon">◉</span>
+          <h4>Servicio</h4>
+          <p>Atención cálida, respetuosa y memorable en todo momento</p>
+        </div>
+        <div class="pilar-card">
+          <span class="pilar-icon">◇</span>
+          <h4>Higiene</h4>
+          <p>Estándares impecables de limpieza en cocina y sala</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- SEMANA 1 -->
+<section id="semana1">
+  <div class="semana-hero">
+    <span class="section-label">Proyecto de Aula · Semana 1</span>
+    <h2 class="section-title" style="text-align:center;">Productividad Personal &<br><em>Economía Digital</em></h2>
+    <div class="divider-line" style="margin: 1.5rem auto;"></div>
+    <p style="max-width:560px;margin:0 auto;color:#b0a898;font-size:0.88rem;line-height:1.85;">
+      La gestión eficiente del tiempo y la adopción de herramientas digitales son claves para el éxito de una empresa gastronómica como Takumi en el mundo actual.
+    </p>
+  </div>
+
+  <div class="section" style="padding-top:2rem;">
+
+    <!-- NEWSLETTER IMAGE -->
+    <div class="reveal" style="margin-bottom:4rem;">
+      <span class="section-label">Newsletter · Edición Semana 1</span>
+      <h2 class="section-title">Nuestra <em>Newsletter</em></h2>
+      <div class="divider-line"></div>
+      <div class="newsletter-frame">
+        <div class="newsletter-label">
+          <span>◇</span>
+          <span>TAKUMI — COCINA CON ALMA &nbsp;·&nbsp; viernes, 29 de mayo del 2026</span>
+          <span>◇</span>
+        </div>
+        <div class="newsletter-img-wrap">
+          <img
+            src="Brown Minimalist Company Newsletter A4 (1).png"
+            alt="Newsletter Semana 1 – Productividad Personal y Economía Digital"
+            class="newsletter-img"
+          >
+          <div class="newsletter-corner tl"></div>
+          <div class="newsletter-corner tr"></div>
+          <div class="newsletter-corner bl"></div>
+          <div class="newsletter-corner br"></div>
+        </div>
+        <p class="newsletter-caption">
+          Newsletter elaborado en Canva — Semana #1: Productividad Personal &amp; Economía Digital
+        </p>
+      </div>
+    </div>
+
+    <!-- RESUMEN DE CONTENIDOS -->
+    <div class="reveal">
+      <span class="section-label">Resumen de contenidos</span>
+      <h2 class="section-title">Lo que cubrimos <em>esta semana</em></h2>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="topics-grid reveal">
+      <div class="topic-card">
+        <div class="num">01</div>
+        <h3>Productividad Personal</h3>
+        <p>La productividad personal es la capacidad de organizar el tiempo y los recursos para alcanzar objetivos de manera eficiente. En Takumi, cada tarea se planifica cuidadosamente para garantizar una experiencia gastronómica única y consistente en cada servicio.</p>
+        <div class="tag-list">
+          <span class="tag">Calendarios digitales</span>
+          <span class="tag">Gestión de tareas</span>
+          <span class="tag">Inventario digital</span>
+          <span class="tag">Reservas en línea</span>
+          <span class="tag">Comunicación interna</span>
+        </div>
+      </div>
+
+      <div class="topic-card">
+        <div class="num">02</div>
+        <h3>Economía Digital</h3>
+        <p>La economía digital utiliza tecnologías digitales e internet para generar valor y mejorar los procesos empresariales. Takumi utiliza redes sociales, pagos electrónicos y herramientas digitales para conectar con sus clientes y mejorar la experiencia de compra.</p>
+        <div class="tag-list">
+          <span class="tag">Conectividad</span>
+          <span class="tag">Innovación</span>
+          <span class="tag">Rapidez</span>
+          <span class="tag">Acceso a información</span>
+          <span class="tag">Globalización</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROCESOS -->
+    <div class="reveal" style="margin-top:3rem;">
+      <span class="section-label">Metodología</span>
+      <h2 class="section-title">Procesos de <em>Productividad</em></h2>
+      <div class="divider-line"></div>
+      <div class="process-steps">
+        <div class="step">
+          <div class="step-num">I</div>
+          <h4>Planificación</h4>
+          <p>Definir metas claras y estrategias para el período</p>
+        </div>
+        <div class="step">
+          <div class="step-num">II</div>
+          <h4>Organización</h4>
+          <p>Asignar recursos y responsabilidades del equipo</p>
+        </div>
+        <div class="step">
+          <div class="step-num">III</div>
+          <h4>Ejecución</h4>
+          <p>Implementar las acciones con precisión y cuidado</p>
+        </div>
+        <div class="step">
+          <div class="step-num">IV</div>
+          <h4>Evaluación</h4>
+          <p>Medir resultados y mejorar continuamente</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILARES ECONOMÍA DIGITAL -->
+    <div class="reveal" style="margin-top:3rem;">
+      <span class="section-label">Pilares</span>
+      <h2 class="section-title">Economía <em>Digital</em> en Takumi</h2>
+      <div class="divider-line"></div>
+      <div class="pilares-grid">
+        <div class="pilar-card">
+          <span class="pilar-icon">⬡</span>
+          <h4>Tecnología</h4>
+          <p>Software de gestión y pedidos integrados</p>
+        </div>
+        <div class="pilar-card">
+          <span class="pilar-icon">◈</span>
+          <h4>Innovación</h4>
+          <p>Adaptación constante a nuevas plataformas</p>
+        </div>
+        <div class="pilar-card">
+          <span class="pilar-icon">◉</span>
+          <h4>Datos e Información</h4>
+          <p>Análisis de preferencias y tendencias</p>
+        </div>
+        <div class="pilar-card">
+          <span class="pilar-icon">◇</span>
+          <h4>Comercio Electrónico</h4>
+          <p>Pedidos en línea y pagos digitales</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- NOTICIAS -->
+<section id="noticias">
+  <div class="section">
+    <span class="section-label">Noticias e Información</span>
+    <h2 class="section-title reveal">Fusión <em>Japonesa</em> &<br>Colombiana</h2>
+    <div class="divider-line"></div>
+
+    <div class="fusion-banner reveal">
+      <h3>Donde Oriente se encuentra con los Andes</h3>
+      <p>Takumi combina ingredientes, técnicas y tradiciones de Japón y Colombia para crear platos únicos. El ají amarillo se encuentra con el dashi, la panela perfuma el salmón, y el maracuyá transforma el mochi. Cada plato es un diálogo entre dos culturas culinarias extraordinarias, unidas por el respeto al sabor y la calidad.</p>
+    </div>
+
+    <!-- MENÚ -->
+    <div class="reveal">
+      <span class="section-label">Nuestra Carta</span>
+      <h2 class="section-title">Menú <em>Takumi</em></h2>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="menu-grid reveal">
+      <div class="menu-cat">
+        <div class="menu-cat-header">
+          <span class="icon">◇</span>
+          <h3>Entradas</h3>
+        </div>
+        <div class="menu-items">
+          <div class="menu-item">
+            <span class="menu-item-name">Tataki de res con ají amarillo</span>
+            <span class="menu-item-price">$18.000</span>
+          </div>
+          <div class="menu-item">
+            <span class="menu-item-name">Gyoza de pipián</span>
+            <span class="menu-item-price">$16.000</span>
+          </div>
+          <div class="menu-item">
+            <span class="menu-item-name">Arepita de arroz con nori</span>
+            <span class="menu-item-price">$14.000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-cat">
+        <div class="menu-cat-header">
+          <span class="icon">⬡</span>
+          <h3>Platos Fuertes</h3>
+        </div>
+        <div class="menu-items">
+          <div class="menu-item">
+            <span class="menu-item-name">Bandeja Takumi</span>
+            <span class="menu-item-price">$38.000</span>
+          </div>
+          <div class="menu-item">
+            <span class="menu-item-name">Ramen de sancocho</span>
+            <span class="menu-item-price">$28.000</span>
+          </div>
+          <div class="menu-item">
+            <span class="menu-item-name">Salmón en costra de panela</span>
+            <span class="menu-item-price">$34.000</span>
+          </div>
+          <div class="menu-item">
+            <span class="menu-item-name">Bowl de arroz chaulafan andino</span>
+            <span class="menu-item-price">$24.000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-cat">
+        <div class="menu-cat-header">
+          <span class="icon">◉</span>
+          <h3>Postres</h3>
+        </div>
+        <div class="menu-items">
+          <div class="menu-item">
+            <span class="menu-item-name">Mochi de maracuyá</span>
+            <span class="menu-item-price">$12.000</span>
+          </div>
+          <div class="menu-item">
+            <span class="menu-item-name">Matcha tres leches</span>
+            <span class="menu-item-price">$14.000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GALERÍA -->
+    <div class="reveal" style="margin-top:4rem;">
+      <span class="section-label">Galería Visual</span>
+      <h2 class="section-title">Nuestra <em>Experiencia</em></h2>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="gallery reveal">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&q=80" alt="Sushi artesanal">
+        <div class="overlay"><span>Sushi artesanal</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&q=80" alt="Ramen">
+        <div class="overlay"><span>Ramen fusión</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80" alt="Gastronomía colombiana">
+        <div class="overlay"><span>Sabores colombianos</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80" alt="Platos de fusión">
+        <div class="overlay"><span>Fusión única</span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80" alt="Alta gastronomía">
+        <div class="overlay"><span>Alta gastronomía</span></div>
+      </div>
+    </div>
+
+    <!-- CURIOSIDAD -->
+    <div class="curiosidad reveal">
+      <h3>¿Sabías que?</h3>
+      <p>La gastronomía de fusión permite combinar culturas culinarias para crear experiencias únicas e irrepetibles. Takumi es la prueba viva de que la cocina no conoce fronteras: cuando Japón y Colombia se encuentran en el plato, nace algo extraordinario.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="takumi blanco.png" alt="Takumi">
+        <p>Empresa gastronómica de fusión japonesa y colombiana. Combinamos tradición, creatividad y calidad para ofrecer experiencias únicas bajo el lema "Cocina con alma".</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#inicio" style="color:inherit;text-decoration:none;">Inicio</a></li>
+          <li><a href="#semana1" style="color:inherit;text-decoration:none;">Semana 1</a></li>
+          <li><a href="#noticias" style="color:inherit;text-decoration:none;">Noticias</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Pilares</h4>
+        <ul>
+          <li>Calidad</li>
+          <li>Creatividad</li>
+          <li>Servicio</li>
+          <li>Higiene</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TAKUMI — Cocina con Alma. Todos los derechos reservados.</span>
+      <span class="kanji">匠</span>
+      <span>Proyecto Escolar · Tecnología e Informática</span>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL UP -->
+<a href="#inicio" id="scrollUp" aria-label="Volver arriba">↑</a>
+
+<script>
+  // Hamburger menu
+  const ham = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  ham.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+  // Close menu on link click
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  // Scroll up button
+  const scrollUp = document.getElementById('scrollUp');
+  window.addEventListener('scroll', () => {
+    scrollUp.classList.toggle('visible', window.scrollY > 500);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.style.boxShadow = window.scrollY > 50 ? '0 4px 30px rgba(0,0,0,0.5)' : 'none';
+  });
+</script>
+</body>
+</html>
